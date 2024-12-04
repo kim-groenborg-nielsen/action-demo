@@ -27,6 +27,9 @@ jobs:
           initial_version: '0.1.0'
           create_tag: true
 
+      - name: Show new version
+        run: echo "New version is ${{ steps.version.outputs.new_version }}"
+
       - name: Set up GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
