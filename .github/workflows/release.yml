@@ -76,6 +76,5 @@ jobs:
           touch private_key
           chmod 600 private_key
           echo "${SSH_PRIVATE_KEY}" > private_key
-          ssh -i private_key -p $SERVER_PORT -o StrictHostKeyChecking=accept-new $SERVER_USER@$SERVER_HOST '[ -f /opt/action-demo/web-app ] && mv /opt/action-demo/web-app /opt/action-demo/web-app.old'
-          scp -i private_key -P $SERVER_PORT web-app $SERVER_USER@$SERVER_HOST:/opt/action-demo/
-          ssh -i private_key -p $SERVER_PORT $SERVER_USER@$SERVER_HOST 'sudo /bin/systemctl restart web-app.service'
+          scp -i private_key -P $SERVER_PORT -o StrictHostKeyChecking=accept-new web-app $SERVER_USER@$SERVER_HOST:.
+          ssh -i private_key -p $SERVER_PORT $SERVER_USER@$SERVER_HOST './deploy.sh'
