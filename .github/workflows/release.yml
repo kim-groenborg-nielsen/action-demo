@@ -55,9 +55,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: release
     steps:
+      - name: Strip v from tag
+        id: strip-v
+        run: |
+          TAG=${{needs.release.outputs.tag}}
+          echo "tag=${TAG#v}" >> "$GITHUB_OUTPUT"
+
       - name: Download release binary
         run: |
-          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/download/${{needs.release.outputs.tag}}/action-demo_${{needs.release.outputs.tag:1}}_linux_amd64.tar.gz
+          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/download/${{needs.release.outputs.tag}}/action-demo_${{steps.strip-v.outputs.tag}}_linux_amd64.tar.gz
           tar -xzf web-app.tar.gz
 
       - name: Deploy to production
