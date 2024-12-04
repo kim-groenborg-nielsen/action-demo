@@ -46,16 +46,17 @@ jobs:
         with:
           initial_version: '0.1.0'
           create_tag: true
-  
+
       - name: Set up GoReleaser
         uses: goreleaser/goreleaser-action@v4
         with:
+          distribution: goreleaser
           version: latest
-
-      - name: Run GoReleaser
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: goreleaser release --rm-dist
+          args: release --clean
+#      - name: Run GoReleaser
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#        run: goreleaser release --rm-dist
 
   deploy:
     runs-on: ubuntu-latest
@@ -74,8 +75,10 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SERVER_USER: ${{ secrets.SERVER_USER }}
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
         run: |
-          echo "${SSH_PRIVATE_KEY}" > private_key
+          touch private_key
           chmod 600 private_key
-          scp -i private_key web-app $SERVER_USER@$SERVER_HOST:/path/to/deploy/
-          ssh -i private_key $SERVER_USER@$SERVER_HOST 'sudo systemctl restart web-app'
+          echo "${SSH_PRIVATE_KEY}" > private_key
+          scp -i private_key -p $SERVER_PORT web-app $SERVER_USER@$SERVER_HOST:/opt/action-demo/
+          ssh -i private_key -P $SERVER_PORT $SERVER_USER@$SERVER_HOST 'sudo systemctl restart web-app'
