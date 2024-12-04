@@ -11,6 +11,8 @@ jobs:
   release:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
     permissions:
       contents: write
       packages: write
@@ -32,10 +34,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          PRERELEASE: true
+#          PRERELEASE: true
 
-      - name: Show new version
-        run: echo "New version is ${{ steps.version.outputs.version-string }}"
+#      - name: Show new version
+#        run: echo "New version is ${{ steps.version.outputs.version-string }}"
+      - name: Get tag
+        id: tag
+        run: echo "tag=$(git describe --tags)" >> "$GITHUB_OUTPUT"
 
       - name: Set up GoReleaser
         uses: goreleaser/goreleaser-action@v4
@@ -52,7 +57,7 @@ jobs:
     steps:
       - name: Download release binary
         run: |
-          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/latest/download/web-app_linux_amd64.tar.gz
+          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/latest/download/action-demo_${{needs.release.outputs.tag}}_linux_amd64.tar.gz
           tar -xzf web-app.tar.gz
 
       - name: Deploy to production
