@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Download release binary
         run: |
-          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/latest/download/action-demo_${{needs.release.outputs.tag}}_linux_amd64.tar.gz
+          curl -L -o web-app.tar.gz https://github.com/kim-groenborg-nielsen/action-demo/releases/download/${{needs.release.outputs.tag}}/action-demo_${{needs.release.outputs.tag:1}}_linux_amd64.tar.gz
           tar -xzf web-app.tar.gz
 
       - name: Deploy to production
