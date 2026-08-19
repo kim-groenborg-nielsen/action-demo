@@ -3,7 +3,7 @@ module github.com/kim-groenborg-nielsen/action-demo
 go 1.23.1
 
 require (
-	github.com/gofiber/fiber/v2 v2.52.12
+	github.com/gofiber/fiber/v2 v2.52.14
 	github.com/joho/godotenv v1.5.1
 	github.com/kim-groenborg-nielsen/goenv v0.0.2
 )
